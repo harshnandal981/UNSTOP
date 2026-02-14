@@ -168,11 +168,14 @@ function allocateRoomsFromFloor(
 
 /**
  * Randomize room occupancy (mark some rooms as occupied)
+ * Preserves existing booked rooms
  */
 export function randomizeOccupancy(rooms: Room[], occupancyRate: number = 0.3): Room[] {
   return rooms.map((room) => ({
     ...room,
-    status: Math.random() < occupancyRate ? "occupied" : "available",
+    status: room.status === "booked" 
+      ? "booked" 
+      : (Math.random() < occupancyRate ? "occupied" : "available"),
   }));
 }
 
@@ -187,12 +190,12 @@ export function resetAllRooms(rooms: Room[]): Room[] {
 }
 
 /**
- * Book selected rooms
+ * Book selected rooms (only if they are available)
  */
 export function bookRooms(allRooms: Room[], roomsToBook: Room[]): Room[] {
   const bookedIds = new Set(roomsToBook.map((r) => r.id));
   return allRooms.map((room) => ({
     ...room,
-    status: bookedIds.has(room.id) ? "booked" : room.status,
+    status: bookedIds.has(room.id) && room.status === "available" ? "booked" : room.status,
   }));
 }

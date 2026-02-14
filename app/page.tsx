@@ -110,7 +110,10 @@ export default function HotelReservationPage() {
                 min="1"
                 max="5"
                 value={requestCount}
-                onChange={(e) => setRequestCount(parseInt(e.target.value) || 1)}
+                onChange={(e) => {
+                  const value = parseInt(e.target.value) || 1;
+                  setRequestCount(Math.max(1, Math.min(5, value)));
+                }}
                 className="w-full px-4 py-3 rounded-lg bg-slate-900/50 border border-slate-600 text-white focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent transition-all"
               />
             </div>
